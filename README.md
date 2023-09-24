@@ -19,10 +19,8 @@ High scores will be associated with a username and a high score. These will all 
 ### Websocket Data
 A list of high scores, with highest at the top, and usernames will constitute a leaderboard on the leaderboard section of the website. The top scorer's username and high score will also be featured on the main game section of the website.
 ## Photos
-![Home Page]
-(/images/shadeseekerhome.png)
+![Home Page](/images/shadeseekerhome.png)
 
-![Leaderboard]
-(/images/leaderboard.png)
+![Leaderboard](/images/leaderboard.png)
 
 http://3.227.196.38

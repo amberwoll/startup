@@ -10,7 +10,9 @@ The leaderboard updates with the highest score of global players and includes th
 ### High Score Boxes
 The global and personal high score boxes are updated with their respective high scores. The personal high score can only be updated if the player is logged in.
 ### Login Page
-The login page takes a player's username and password, and then gives additional access to seeing one's own high score on the main page. It also allows the user to make it on the global leaderboard if they beat the global high score.
+The login page takes a player's username and password then gives additional access to seeing one's own high score on the main page. It also allows the user to make it on the global leaderboard if they beat the global high score.
+### Help Page
+The help page contains 3 main sections. 1 has the game instructions, 1 has the background for the creation of the game, and 1 has contact info in case there are issues with the game.
 ## Using Each Technology
 ### Authentication
 The game with have a login page that requests a username and password. These will be necessary to save personal high scores and to show up on the leaderboard.

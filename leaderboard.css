@@ -1,0 +1,31 @@
+table {
+    background-color: white;
+    width: 90%;
+    padding: 10px;
+    color: black;
+    font-size: 20px;
+    background-image: url('/images/leaderboardtop3.jpg'); /* Replace 'path-to-your-image.jpg' with the actual path to your image */
+    background-size: 45% auto; /* Adjust to your preferred size */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    background-position: center center; /* Center the image */
+    font-weight: bold;
+    border: 3px solid black;
+    border-collapse: collapse;
+}
+
+td {
+    align-items: center;
+    border: 3px solid black;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+tr {
+    border: 3px solid black;
+    border-collapse: collapse;
+}
+
+th {
+    font-size: 25px;
+}

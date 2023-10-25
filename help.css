@@ -1,0 +1,17 @@
+.text {
+    text-align: left !important;
+}
+
+.sections {
+    padding: 20px;
+}
+
+h2 {
+    color: black;
+    background-color: white;
+    padding: 4px;
+}
+
+p {
+    padding-top: 5px;
+}

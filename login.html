@@ -7,6 +7,7 @@
     <title>Leaderboard</title>
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="login.css">
 </head>
 
 <body>
@@ -25,14 +26,19 @@
     </header>
 
     <main>
-        <h1>Login</h1>
+        <h1 class="title">Login</h1>
+
         <p>Log in to save your scores and make it on the leaderboard!</p>
         <form method="get" action="index.html">
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="Your username here" />
-            <label for="password">Password</label>
-            <input type="text" id="password" placeholder="Your password here" />
-            <button type="submit">Login</button>
+            <div class="login">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Your username here" />
+            </div>
+            <div class="login">
+                <label for="password">Password</label>
+                <input type="text" id="password" placeholder="Your password here" />
+            </div>
+            <div class="button-padding"><button type="submit">Login</button></div>
           </form>
     </main>
 

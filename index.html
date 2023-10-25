@@ -6,14 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shade Seeker</title>
     <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 
 <body>
     <header>
-        <h1>Shade Seeker<sup>&reg;</sup></h1>
-        <h3>Find which shade is different from the rest!</h3>
-        <img src="/images/detective.jpg" alt="seeker or detective">
-
+        <div class="headings">
+            <div class=title-line>
+                <h1 class="top">Shade Seeker<sup>&reg;</sup></h1>
+                <img src="/images/magglass3.png" width="20" height="20" alt="magnifying glass">
+            </div>
+            <h3 class="description">Find which shade is different from the rest!</h3>
+        </div>
         <nav>
             <menu>
                 <li><a href="login.html">Login</a></li>
@@ -27,7 +32,7 @@
     </header>
 
     <main>
-        <div>
+        <div class="centered">
             <table>
                 <tr>
                     <td>
@@ -63,22 +68,22 @@
                 </tr>
             </table>
         </div>
-        <div>
-            <label for="count">Current Score</label>
+        <div class="box">
+            <label for="count">Current Score: </label>
             <input type="text" id="count" value="10" readonly />
         </div>
-        <br>
-        <div>Log in to see your high score!</div>
-        <div>
-            <label for="count">Your High Score:</label>
-            <input type="text" id="count" value="10" readonly />
+        <div class="left-boxes">
+            <div class="above-label">Log in to see your high score!</div>
+            <div class="box">
+                <label for="count">Your High Score: </label>
+                <input type="text" id="count" value="10" readonly />
+            </div>
+            <div class="above-label">Amber Woll holds the overall high score </div>
+            <div class="box">
+                <label for="count">Worldwide High Score: </label>
+                <input type="text" id="count" value="10" readonly />
+            </div>
         </div>
-        <div>Amber Woll holds the current high score:</div>
-        <div>
-            <label for="count">Worldwide High Score</label>
-            <input type="text" id="count" value="10" readonly />
-        </div>
-    </br>
     </main>
 
     <footer>

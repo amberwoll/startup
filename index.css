@@ -1,0 +1,59 @@
+.title-line {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    background-color: gray;
+    padding: 10px;
+}
+
+.title-line {
+    display: flex;
+    align-items: center;
+    flex-direction: row !important;
+}
+
+.centered {
+    background-color: gray;
+    padding: 20px;
+}
+
+table {
+    width: 200px; 
+    height: 200px; 
+    background-color: white;
+    padding: 20px gray;
+}
+
+td {
+    width: 50%; 
+    height: 50%; 
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    background-color: white;
+}
+
+button {
+    width: 100%; 
+    height: 100%;
+}
+
+input {
+    width: 30px;
+    font-size: 20px;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.above-label {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.top {
+    font-size: 80px;
+}
+
+.description {
+    font-size: 25px;
+}

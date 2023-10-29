@@ -16,7 +16,7 @@ The help page contains 3 main sections. 1 has the game instructions, 1 has the b
 ### Simon Page
 The simon section of the page, accessible with simon.shadeseeker.click, allows you to see a CSS styled Simon game as a sample.
 ### Other Features
-There is a menu that allows access to each of the pages off to the right of the game at all times.
+There is a menu that allows access to each of the pages off to the right of the game at all times. Each page of the application shares a title, the logo of the game, with a magnifying glass.
 ## Using Each Technology
 ### Authentication
 The game with have a login page that requests a username and password. These will be necessary to save personal high scores and to show up on the leaderboard.

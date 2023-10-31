@@ -8,6 +8,7 @@
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="login.css">
+    <script src="login.js"></script>
 </head>
 
 <body>
@@ -29,7 +30,7 @@
         <h1 class="title">Login</h1>
 
         <p>Log in to save your scores and make it on the leaderboard!</p>
-        <form method="get" action="index.html">
+        <form id="login" method="get" action="index.html">
             <div class="login">
                 <label for="username">Username</label>
                 <input type="text" id="username" placeholder="Your username here" />
@@ -38,7 +39,9 @@
                 <label for="password">Password</label>
                 <input type="text" id="password" placeholder="Your password here" />
             </div>
-            <div class="button-padding"><button type="submit">Login</button></div>
+            <div class="button-padding">
+                <button type="submit" id="loginButton">Register</button>
+            </div>
           </form>
     </main>
 

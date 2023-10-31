@@ -1,11 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
     let currentScore = 0;
     let round = 1;
-    let correctButtonIndex;
     const buttons = document.querySelectorAll("button");
-    let colorChange = 40;
+    let colorChange = 60;
     let randomButtonId; 
     let savedHighScore = localStorage.getItem("highScore");
+    const savedUserData = localStorage.getItem("userData");
+
+    if (savedUserData) {
+        let userData = JSON.parse(savedUserData);
+        // let username = userData.username;
+        let highScore = userData.highScore;
+        document.getElementById("count2").value = highScore;
+    }
 
     if (savedHighScore !== null) {
         document.getElementById("count2").value = savedHighScore;

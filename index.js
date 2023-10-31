@@ -5,6 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll("button");
     let colorChange = 40;
     let randomButtonId; 
+    let savedHighScore = localStorage.getItem("highScore");
+
+    if (savedHighScore !== null) {
+        document.getElementById("count2").value = savedHighScore;
+    } else {
+        document.getElementById("count2").value = 0;
+    }
 
     function getRandomColors() {
         const baseR = Math.floor(Math.random() * 256);
@@ -28,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             button.style.backgroundColor = randomColor;
         });
 
-        randomButtonId = (Math.floor(Math.random() * 4) + 1); // Set randomButtonId here
+        randomButtonId = (Math.floor(Math.random() * 4) + 1);
         console.log('random id 1')
         console.log(randomButtonId);
         const differentButton = document.getElementById(randomButtonId);
@@ -53,6 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (colorChange > 1) {
                     colorChange--;
                 }
+                document.getElementById("count1").value = currentScore;
+                if (currentScore > savedHighScore) {
+                    savedHighScore = currentScore;
+                    localStorage.setItem("highScore", savedHighScore);
+                    document.getElementById("count2").value = savedHighScore;
+                }
             } else {
                 currentScore = 0;
                 colorChange = 40;
@@ -61,8 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(colorChange);
             console.log('current score')
             console.log(currentScore);
-            const count1Input = document.getElementById("count1");
-            count1Input.value = currentScore;
+            document.getElementById("count1").value = currentScore;
             startNewRound();
         });
     });

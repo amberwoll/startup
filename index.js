@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll("button");
     let colorChange = 60;
     let randomButtonId; 
-    let savedHighScore = localStorage.getItem("highScore");
     const savedUserData = localStorage.getItem("userData");
 
     if (savedUserData) {
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (savedHighScore !== null) {
-        document.getElementById("count2").value = savedHighScore;
+        document.getElementById("count2").value = highScore;
     } else {
         document.getElementById("count2").value = 0;
     }
@@ -59,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("count1").value = currentScore;
                 if (currentScore > savedHighScore) {
                     savedHighScore = currentScore;
-                    localStorage.setItem("highScore", savedHighScore);
-                    document.getElementById("count2").value = savedHighScore;
+                    localStorage.setItem("highScore", highScore);
+                    document.getElementById("count2").value = highScore;
                 }
             } else {
                 currentScore = 0;

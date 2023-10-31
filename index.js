@@ -3,22 +3,24 @@ document.addEventListener("DOMContentLoaded", function () {
     let round = 1;
     const buttons = document.querySelectorAll("button");
     let colorChange = 60;
-    let randomButtonId; 
-    let savedHighScore = localStorage.getItem("highScore");
+    let randomButtonId;
+    let highScore = 0; 
     const savedUserData = localStorage.getItem("userData");
 
     if (savedUserData) {
         let userData = JSON.parse(savedUserData);
         // let username = userData.username;
-        let highScore = userData.highScore;
+        if (userData.hasOwnProperty("highScore")) {
+            highScore = userData.highScore;
+        }
         document.getElementById("count2").value = highScore;
-    }
+        document.getElementById("loggedin").value = '';
 
-    if (savedHighScore !== null) {
-        document.getElementById("count2").value = savedHighScore;
     } else {
         document.getElementById("count2").value = 0;
+        document.getElementById("loggedin").value = 'Log in to save your scores and make it on the leaderboard!';
     }
+
 
     function getRandomColors() {
         const baseR = Math.floor(Math.random() * 256);
@@ -57,10 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     colorChange--;
                 }
                 document.getElementById("count1").value = currentScore;
-                if (currentScore > savedHighScore) {
-                    savedHighScore = currentScore;
-                    localStorage.setItem("highScore", savedHighScore);
-                    document.getElementById("count2").value = savedHighScore;
+                if (currentScore > highScore) {
+                    highScore = currentScore;
+                    localStorage.setItem("highScore", highScore);
+                    document.getElementById("count2").value = highScore;
                 }
             } else {
                 currentScore = 0;

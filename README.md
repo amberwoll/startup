@@ -8,7 +8,7 @@ The game includes the main 4 squares that change color with every click and a hi
 ### Leaderboard
 The leaderboard updates with the highest score of global players and includes the top 10 high scores. In the background of the leaderboard is a leaderboard image.
 ### High Score Boxes
-The global and personal high score boxes are updated with their respective high scores. The personal high score can only be updated if the player is logged in. These are off to the right of the game.
+The global and personal high score boxes are updated with their respective high scores. The personal high score can only be updated if the player is logged in. These are off to the right of the game. These are updated using JavaScript.
 ### Login Page
 The login page takes a player's username and password then gives additional access to seeing one's own high score on the main page. It also allows the user to make it on the global leaderboard if they beat the global high score.
 ### Help Page
@@ -19,11 +19,11 @@ The simon section of the page, accessible with simon.shadeseeker.click, allows y
 There is a menu that allows access to each of the pages off to the right of the game at all times. Each page of the application shares a title, the logo of the game, with a magnifying glass.
 ## Using Each Technology
 ### Authentication
-The game with have a login page that requests a username and password. These will be necessary to save personal high scores and to show up on the leaderboard.
+The game with have a login page that requests a username and password. These will be necessary to save personal high scores and to show up on the leaderboard. If they have not logged in before, a register page is shown instead.
 ### Database Data
-High scores will be associated with a username and a high score. These will all be stored in a database and show up on the user's main game page if they are logged in.
+High scores will be associated with a username and a high score. These will all be stored in a database and show up on the user's main game page if they are logged in. Users, after logging in, can view their previous scores.
 ### Websocket Data
-A list of high scores, with highest at the top, and usernames will constitute a leaderboard on the leaderboard section of the website. The top scorer's username and high score will also be featured on the main game section of the website.
+A list of high scores, with highest at the top, and usernames will constitute a leaderboard on the leaderboard section of the website. The top scorer's username and high score will also be featured on the main game section of the website. JavaScript sets each player's username with their high score and compares it against other user's data.
 ## Photos
 ![Home Page](/images/shadeseekerhome.png)
 

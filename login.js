@@ -1,23 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
     let users = {};
-    let toggleModeButton = document.getElementById("toggleMode");
     let loginButton = document.getElementById("loginButton");
     let registrationMode = false;
 
-    toggleModeButton.addEventListener("click", function () {
+    loginButton.addEventListener("click", function () {
         registrationMode = !registrationMode;
-        toggleModeButton.textContent = registrationMode ? "Login" : "Register";
-        loginButton.textContent = registrationMode ? "Register" : "Login";
+        loginButton.textContent = registrationMode ? "Login" : "Register";
     });
-    let userData = {}
+    let userData = {};
 
     document.getElementById("login").addEventListener("submit", function (e) {
         e.preventDefault();
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        console.log(`users: ${JSON.stringify(users)}`);
+        console.log(`password: ${password}`);
+        console.log(`username: ${username}`);
+        console.log(`registration mode: ${registrationMode}`);
+        console.log(`login button text: ${loginButton.textContent}`);
 
         if (registrationMode) {
             if (!users[username]) {
+                console.log('option 1.1');
                 users[username] = {
                     password: password,
                     highScore: 0,
@@ -28,18 +33,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     highScore: users[username].highScore,
                 };
             } else {
+                console.log('option 1.2');
                 alert("Username already exists. Choose a different username or login.");
                 loginButton.textContent = "Login";
             }
         } else {
+            console.log('option 2');
             if (users[username] && users[username].password === password) {
+                console.log('option 2.1');
                 alert("Login successful.");
-                document.getElementById("userHighScore").textContent = users[username].highScore;
                 userData = {
                     username: username,
                     highScore: users[username].highScore,
                 };
             } else {
+                console.log('option 2.2');
                 alert("Login failed. Check your username and password.");
             }
         }

@@ -98,9 +98,7 @@ Given the following HTML, what CSS would you use to set the text "troubl" to gre
 What will the following code output when executed using a for loop and console.log?
 
 How would you use JavaScript to select an element with the id of "byu" and change the text color of that element to green?
-Answer: You can use the following JavaScript code:
-javascript
-Copy code
+Answer: 
 const element = document.getElementById("byu");
 element.style.color = "green";
 

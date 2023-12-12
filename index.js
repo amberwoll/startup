@@ -1,77 +1,59 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let currentScore = 0;
-    let round = 1;
-    const buttons = document.querySelectorAll("button");
-    let colorChange = 60;
-    let randomButtonId;
-    let highScore = 0; 
-    const savedUserData = localStorage.getItem("userData");
+const express = require('express');
+const app = express();
 
-    if (savedUserData) {
-        let userData = JSON.parse(savedUserData);
-        // let username = userData.username;
-        if (userData.hasOwnProperty("highScore")) {
-            highScore = userData.highScore;
-        }
-        document.getElementById("count2").value = highScore;
-        document.getElementById("loggedin").value = '';
+// The service port. In production the front-end code is statically hosted by the service on the same port.
+const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
-    } else {
-        document.getElementById("count2").value = 0;
-        document.getElementById("loggedin").value = 'Log in to save your scores and make it on the leaderboard!';
-    }
+// JSON body parsing using built-in middleware
+app.use(express.json());
 
+// Serve up the front-end static content hosting
+app.use(express.static('public'));
 
-    function getRandomColors() {
-        const baseR = Math.floor(Math.random() * 256);
-        const baseG = Math.floor(Math.random() * 256);
-        const baseB = Math.floor(Math.random() * 256);
+// Router for service endpoints
+var apiRouter = express.Router();
+app.use(`/api`, apiRouter);
 
-        const modifiedR = baseR + colorChange;
-        const modifiedG = baseG + colorChange;
-        const modifiedB = baseB + colorChange;
-
-        const randomColor = `rgb(${baseR},${baseG},${baseB})`;
-        const modifiedColor = `rgb(${modifiedR},${modifiedG},${modifiedB})`;
-
-        return { randomColor, modifiedColor };
-    }
-
-    function startNewRound() {
-        const { randomColor, modifiedColor } = getRandomColors();
-
-        buttons.forEach((button) => {  
-            button.style.backgroundColor = randomColor;
-        });
-
-        randomButtonId = (Math.floor(Math.random() * 4) + 1);
-        const differentButton = document.getElementById(randomButtonId);
-        differentButton.style.backgroundColor = modifiedColor;
-
-        round++;
-    }
-
-    buttons.forEach((button, id) => {
-        button.addEventListener("click", function () {
-            if ((id + 1) === randomButtonId) {
-                currentScore++;
-                if (colorChange > 1) {
-                    colorChange--;
-                }
-                document.getElementById("count1").value = currentScore;
-                if (currentScore > highScore) {
-                    highScore = currentScore;
-                    localStorage.setItem("highScore", highScore);
-                    document.getElementById("count2").value = highScore;
-                }
-            } else {
-                currentScore = 0;
-                colorChange = 40;
-            }
-            document.getElementById("count1").value = currentScore;
-            startNewRound();
-        });
-    });
-
-    startNewRound();
+// GetScores
+apiRouter.get('/scores', (_req, res) => {
+  res.send(scores);
 });
+
+// SubmitScore
+apiRouter.post('/score', (req, res) => {
+  scores = updateScores(req.body, scores);
+  res.send(scores);
+});
+
+// Return the application's default page if the path is unknown
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
+
+// updateScores considers a new score for inclusion in the high scores.
+// The high scores are saved in memory and disappear whenever the service is restarted.
+let scores = [];
+function updateScores(newScore, scores) {
+  let found = false;
+  for (const [i, prevScore] of scores.entries()) {
+    if (newScore.score > prevScore.score) {
+      scores.splice(i, 0, newScore);
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    scores.push(newScore);
+  }
+
+  if (scores.length > 10) {
+    scores.length = 10;
+  }
+
+  return scores;
+}

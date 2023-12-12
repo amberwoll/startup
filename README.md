@@ -29,4 +29,11 @@ A list of high scores, with highest at the top, and usernames will constitute a 
 
 ![Leaderboard](/images/leaderboard.png)
 
+## CSS Deliverable
+
+## JavaScript Deliverable
+
+## Service Deliverable
+
+
 http://3.227.196.38

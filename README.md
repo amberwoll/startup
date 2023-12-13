@@ -34,6 +34,14 @@ A list of high scores, with highest at the top, and usernames will constitute a 
 ## JavaScript Deliverable
 
 ## Service Deliverable
+Created an HTTP service using Node.js and Express: initiated node in project and downloaded express, used both in index.js file for server
 
+Frontend served up using express static middleware: middleware included in service via static file middleware
+
+Frontend calls third party service endpoints: help page includes a random fact section from third party service endpoints
+
+Backend provides service endpoints: scores array saved to a service endpoint on backend to be used in leaderboard and game page
+
+Frontend calls your service endpoints: functions call this array to get it and later update it
 
 http://3.227.196.38

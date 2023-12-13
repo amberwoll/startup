@@ -30,6 +30,12 @@ A list of high scores, with highest at the top, and usernames will constitute a 
 ![Leaderboard](/images/leaderboard.png)
 
 ## CSS Deliverable
+Header, footer, and main content body - consistent style applied throughout pages
+Navigation elements - styled sidebar on each page and updated title upon navigation
+Responsive to window resizing- used flex containers and widths that are a percentage of page to make page responsive to resizing
+Application elements - game boxes styled to be various colors and 4 square buttons
+Application text content - consistent and distinct font and colors
+Application images - image on background of leaderboard and as part of logo
 
 ## JavaScript Deliverable
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+let scores = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -36,7 +37,6 @@ app.listen(port, () => {
 
 // updateScores considers a new score for inclusion in the high scores.
 // The high scores are saved in memory and disappear whenever the service is restarted.
-let scores = [];
 function updateScores(newScore, scores) {
   let found = false;
   for (const [i, prevScore] of scores.entries()) {
@@ -46,6 +46,15 @@ function updateScores(newScore, scores) {
       break;
     }
   }
+
+apiRouter.post('/update-scores', (req, res) => {
+  if (Array.isArray(req.body)) {
+      scores = req.body.slice(0, 10); // Update scores with top 10 from the received array
+      res.send(scores);
+  } else {
+      res.status(400).send('Invalid scores data');
+  }
+});
 
   if (!found) {
     scores.push(newScore);

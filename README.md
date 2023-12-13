@@ -31,13 +31,25 @@ A list of high scores, with highest at the top, and usernames will constitute a 
 
 ## CSS Deliverable
 Header, footer, and main content body - consistent style applied throughout pages
+
 Navigation elements - styled sidebar on each page and updated title upon navigation
+
 Responsive to window resizing- used flex containers and widths that are a percentage of page to make page responsive to resizing
+
 Application elements - game boxes styled to be various colors and 4 square buttons
+
 Application text content - consistent and distinct font and colors
+
 Application images - image on background of leaderboard and as part of logo
 
 ## JavaScript Deliverable
+JavaScript support for future login - functions to save username and password and display it on game page, toggle between login and register pages
+
+JavaScript support for future database data - leaderboard updated initially with database scores, passwords and usernames with high scores saved to database
+
+JavaScript support for future WebSocket - leaderboard regularly updated via function that will call websocket data
+
+JavaScript support for your application's interaction logic - buttons and gameplay change colors each round and accumulate scores
 
 ## Service Deliverable
 Created an HTTP service using Node.js and Express: initiated node in project and downloaded express, used both in index.js file for server

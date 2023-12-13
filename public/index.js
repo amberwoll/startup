@@ -1,24 +1,24 @@
 let currentScore = 0;
+let currentDate = new Date().toLocaleDateString();
 let round = 1;
 let colorChange = 60;
 let randomButtonId;
 let userData = { username: "Player2", highScore: 0 };
-let scores = JSON.parse(localStorage.getItem("scores")) || [];
+let scores = [];
 
 async function loadScores() {
     try {
       // Get the latest high scores from the service
-      const response = await fetch('/api/scores');
+      const response = await fetch('http://localhost:4000/api/scores');
       scores = await response.json();
-      console.log("SCORES")
-      console.log(scores)
-  
+      if (scores == []) {
+        updateHighestScoreDisplay()
+      }
       // Save the scores in case we go offline in the future
       localStorage.setItem('scores', JSON.stringify(scores));
     } catch {
       // If there was an error then just use the last saved scores
       const scoresText = localStorage.getItem('scores');
-      console.log("accessed local")
       if (scoresText) {
         scores = JSON.parse(scoresText);
       }
@@ -74,19 +74,16 @@ async function pushScoresToServer() {
 // }
 
 document.addEventListener("DOMContentLoaded", function () {
-    loadScores()
     const buttons = document.querySelectorAll("button");
     const savedUserData = localStorage.getItem("userData");
-    updateHighestScoreDisplay()
-    startNewRound()
+    loadScores();
+    startNewRound();
     
-
+    
     if (savedUserData) {
         let userData = JSON.parse(savedUserData);
         let username = userData.username;
         if (userData.hasOwnProperty("highScore")) {
-            console.log("HIGH SCORE")
-            console.log(userData.highScore)
             insertCurrentPlayerHighScore(userData.highScore, username);
             updateHighestScoreDisplay()
         }
@@ -97,6 +94,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("count2").value = 0;
         document.getElementById("loggedin").value = 'Log in to save your scores and make it on the leaderboard!';
     }
+
+    updateHighestScoreDisplay();
 
     function startNewRound() {
         const { randomColor, modifiedColor } = getRandomColors();
@@ -113,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateScores(newScore, username) {
-        const currentDate = new Date().toLocaleDateString();
         scores.push({ score: newScore, username: username, date: currentDate });
     
         scores.sort((a, b) => b.score - a.score);
@@ -123,9 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     
         localStorage.setItem("scores", JSON.stringify(scores));
-        pushScoresToServer();
         updateHighestScoreDisplay();
-        console.log("pushed")
     }
 
     function resetScores() {
@@ -157,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function insertCurrentPlayerHighScore(highScore, username) {
         let userHighScore = scores.find(s => s.username === username);
         if (!userHighScore) {
-            scores.push({ score: highScore, username: username });
+            scores.push({ score: highScore, username: username, date: currentDate });
             scores.sort((a, b) => b.score - a.score);
             
             if (scores.length > 10) {
@@ -180,20 +176,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!userHighScore || currentScore > userHighScore.score) {
                     if (userHighScore) {
                         userHighScore.score = currentScore;
-                    } else {
-                        updateScores(currentScore, userData.username);
                     }
+                    updateScores(currentScore, userData.username);
 
                     if (currentScore > userData.highScore) {
                         userData.highScore = currentScore;
                         localStorage.setItem("userData", JSON.stringify(userData));
                         document.getElementById("count2").value = userData.highScore;
-                        updateHighestScoreDisplay()
                     }
             }
             } else {
-                console.log("SCORES")
-                console.log(scores)
                 currentScore = 0;
                 colorChange = 60;
             }
@@ -207,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function updateHighestScoreDisplay() {
     if (scores.length > 0) {
-        const highestScoreEntry = scores[0];
+        let highestScoreEntry = scores[0];
         document.getElementById("highestScorePlayer").textContent = highestScoreEntry.username;
         document.getElementById("count3").value = highestScoreEntry.score;
     }

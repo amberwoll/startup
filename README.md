@@ -62,4 +62,9 @@ Backend provides service endpoints: scores array saved to a service endpoint on 
 
 Frontend calls your service endpoints: functions call this array to get it and later update it
 
-http://3.227.196.38
+## DB Deliverable
+MongoDB Atlas database created - initiated and instantiated on the website
+
+Provides backend endpoints for manipulating application data- in database.js file
+
+Stores application data in MongoDB- currently holds scores info on the web

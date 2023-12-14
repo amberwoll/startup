@@ -202,9 +202,9 @@ async function loadTopScore() {
         const scores = await response.json();
         if (scores && scores.length > 0) {
             const topScore = scores[0];
-            document.getElementById("highestScorePlayer").textContent = topScore.name;
+            document.getElementById("highestScorePlayer").textContent = topScore.username;
             console.log(topScore);
-            console.log(topScore.name);
+            console.log(topScore.username);
             document.getElementById("count3").value = topScore.score;
         }
     } catch (error) {
@@ -213,7 +213,7 @@ async function loadTopScore() {
 }
 
 async function saveScore(currentScore) {
-    const newScore = { name: userData.username, score: currentScore, date: new Date().toLocaleDateString() };
+    const newScore = { username: userData.username, score: currentScore, date: new Date().toLocaleDateString() };
     try {
         await fetch('http://localhost:4000/api/score', {
             method: 'POST',
@@ -232,7 +232,7 @@ async function saveScore(currentScore) {
 
 function updateScores(newScore, username) {
     let scores = JSON.parse(localStorage.getItem('scores') || '[]');
-    scores.push({ score: newScore, username: username, date: new Date().toLocaleDateString() });
+    scores.push({ username: username, score: newScore, date: new Date().toLocaleDateString() });
     scores.sort((a, b) => b.score - a.score);
 
     if (scores.length > 10) {

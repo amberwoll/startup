@@ -52,28 +52,37 @@ JavaScript support for future WebSocket - leaderboard regularly updated via func
 JavaScript support for your application's interaction logic - buttons and gameplay change colors each round and accumulate scores
 
 ## Service Deliverable
-Created an HTTP service using Node.js and Express: initiated node in project and downloaded express, used both in index.js file for server
+Created an HTTP service using Node.js and Express - initiated node in project and downloaded express, used both in index.js file for server
 
-Frontend served up using express static middleware: middleware included in service via static file middleware
+Frontend served up using express static middleware - middleware included in service via static file middleware
 
-Frontend calls third party service endpoints: help page includes a random fact section from third party service endpoints
+Frontend calls third party service endpoints - help page includes a random fact section from third party service endpoints
 
-Backend provides service endpoints: scores array saved to a service endpoint on backend to be used in leaderboard and game page
+Backend provides service endpoints - scores array saved to a service endpoint on backend to be used in leaderboard and game page
 
-Frontend calls your service endpoints: functions call this array to get it and later update it
+Frontend calls your service endpoints - functions call this array to get it and later update it
 
 ## DB Deliverable
 MongoDB Atlas database created - initiated and instantiated on the website
 
-Provides backend endpoints for manipulating application data- in database.js file
+Provides backend endpoints for manipulating application data - in database.js file
 
-Stores application data in MongoDB- currently holds scores info on the web
+Stores application data in MongoDB - currently holds scores info on the web
 
 ## Login Deliverable
-Supports new user registration- has this functionality using the register button
+Supports new user registration - has this functionality using the register button
 
-Supports existing user authentication- has this funcitonality using the login button
+Supports existing user authentication - has this funcitonality using the login button
 
-Stores and retrieves credentials in MongoDB- new data for user created in db
+Stores and retrieves credentials in MongoDB - new data for user created in db
 
-Restricts application functionality based upon authentication- doesn't allow multiple users of the same username and requires correct password, also doesn't save high scores to leaderboard without login
+Restricts application functionality based upon authentication - doesn't allow multiple users of the same username and requires correct password, also doesn't save high scores to leaderboard without login
+
+## Websocket Deliverable
+Backend listens for WebSocket connection - currently defined in the peer proxy file
+
+Frontend makes WebSocket connection - in index.js file
+
+Data sent over WebSocket connection - sent to index.html page
+
+WebSocket data displayed in the application interface - shown on the main index.html page

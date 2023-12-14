@@ -1,11 +1,14 @@
 let currentScore = 0;
-let userData = { username: "Player2", highScore: 0 };
+let userData = { username: null, highScore: 0 };
 let colorChange = 60;
 let randomButtonId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const buttons = document.querySelectorAll("button");
+    userArray();
+    checkLoggedInUser();
     localStorage.setItem("userData", JSON.stringify(userData));
+    localStorage.setItem("userData.username", "userName");
     loadUserHighScore();
     await loadTopScore();
     startNewRound();
@@ -44,6 +47,30 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 });
 
+async function checkLoggedInUser() {
+    try {
+        const response = await fetch('/api/user/me', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            const user = await response.json();
+            userData.username = user.uname; // Update the username in userData
+            // You can also update the highScore here if needed
+        } else {
+            // Handle the case when the user is not logged in
+            console.log("User is not logged in");
+        }
+    } catch (error) {
+        console.error('Error checking logged in user:', error);
+    }
+}
+
+
 async function loadUserHighScore() {
     let savedUserData = localStorage.getItem("userData");
 
@@ -55,6 +82,8 @@ async function loadUserHighScore() {
         fetchUserHighScoreFromServer("Player2");
     }
 }
+
+
 
 async function fetchUserHighScoreFromServer(username) {
     try {
@@ -70,6 +99,19 @@ async function fetchUserHighScoreFromServer(username) {
     }
 }
 
+
+async function userArray() {
+    try {
+        const response = await fetch('http://localhost:4000/api/users');
+        const userArray = await response;
+        console.log(response);
+        if (userArray.length > 0) {
+            console.log(userArray)
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+    }
+}
 
 async function loadTopScore() {
     try {

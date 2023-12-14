@@ -70,7 +70,10 @@ Provides backend endpoints for manipulating application data- in database.js fil
 Stores application data in MongoDB- currently holds scores info on the web
 
 ## Login Deliverable
-25% - Supports new user registration
-25% - Supports existing user authentication
-20% - Stores and retrieves credentials in MongoDB
-20% - Restricts application functionality based upon authentication
+Supports new user registration- has this functionality using the register button
+
+Supports existing user authentication- has this funcitonality using the login button
+
+Stores and retrieves credentials in MongoDB- new data for user created in db
+
+Restricts application functionality based upon authentication- doesn't allow multiple users of the same username and requires correct password, also doesn't save high scores to leaderboard without login

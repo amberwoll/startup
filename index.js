@@ -19,10 +19,6 @@ apiRouter.get('/scores', async (_req, res) => {
   res.send(scores);
 });
 
-apiRouter.get('/users', async (_req, res) => {
-  const users = await MongoDB.getUsers();
-  res.send(users);
-});
 
 // SubmitScore
 apiRouter.post('/score', async (req, res) => {
@@ -105,7 +101,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 // getMe for the currently authenticated user
 apiRouter.get('/user/me', async (req, res) => {
   authToken = req.cookies[authCookieName];
-  const user = await getUserByToken(authToken);
+  const user = await MongoDB.getUserByToken(authToken);
   if (user) {
     res.send({ uname: user.uname });
     return;

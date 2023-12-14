@@ -28,10 +28,6 @@ function getUserByToken(token) {
   return userCollection.findOne({ token: token });
 }
 
-function getUsers() {
-    return userCollection.toArray();
-  }
-
 async function createUser(uname, password) {
   // Hash the password before we insert it into the database
   const passwordHash = await bcrypt.hash(password, 10);
@@ -86,7 +82,6 @@ async function testConnection() {
     getUser,
     getUserByToken,
     createUser,
-    getUsers,
  };
   
   if (require.main === module) {

@@ -30,7 +30,7 @@ async function loadScores() {
         const dateCell = row.insertCell(2);
         nameCell.textContent = entry.username;
         scoreCell.textContent = entry.score;
-        dateCell.textContent = formatScoreDate(entry.date);
+        dateCell.textContent = entry.date;
     });
 }
 

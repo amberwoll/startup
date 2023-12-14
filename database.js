@@ -36,8 +36,12 @@ async function testConnection() {
     const cursor = scoreCollection.find(query, options);
     return cursor.toArray();
   }
+
+  async function getTopScoreForUser(username) {
+    return await scoreCollection.find({ username: username }).sort({ score: -1 }).limit(1).next();
+}
   
-  module.exports = { addScore, getHighScores };
+  module.exports = { addScore, getHighScores, getTopScoreForUser };
   
   if (require.main === module) {
     testConnection();

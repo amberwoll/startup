@@ -22,6 +22,16 @@ apiRouter.post('/score', async (req, res) => {
   res.send(scores);
 });
 
+apiRouter.get('/scores/highscore/:username', async (req, res) => {
+  const username = req.params.username;
+  try {
+      const topScore = await MongoDB.getTopScoreForUser(username);
+      res.json(topScore);
+  } catch (error) {
+      res.status(500).send('Error retrieving user high score');
+  }
+});
+
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
   res.sendFile('index.html', {root: 'public'});

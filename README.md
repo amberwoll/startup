@@ -68,9 +68,3 @@ MongoDB Atlas database created - initiated and instantiated on the website
 Provides backend endpoints for manipulating application data- in database.js file
 
 Stores application data in MongoDB- currently holds scores info on the web
-
-## Login Deliverable
-25% - Supports new user registration
-25% - Supports existing user authentication
-20% - Stores and retrieves credentials in MongoDB
-20% - Restricts application functionality based upon authentication

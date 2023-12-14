@@ -1,76 +1,53 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-    initializePage();
-  
-    // Add event listeners
-    document.getElementById('loginButton').addEventListener('click', loginUser);
-    document.getElementById('registerButton').addEventListener('click', createUser);
-  });
-  
-  function initializePage() {
-    const userName = localStorage.getItem('username');
-    if (userName) {
-      // Assuming you want to hide the login form if the user is already logged in
-      setDisplay('loginForm', 'none');
-      document.getElementById("isntloggedin").style.display = "none";
-      document.getElementById("isloggedin").style.display = 'block';
-      document.getElementById("logoutButton").style.display = 'block';
+document.addEventListener("DOMContentLoaded", function () {
+    let users = {};
+    let loginButton = document.getElementById("loginButton");
+    let registrationMode = false;
 
-      const logoutButton = document.getElementById('logoutButton');
-      if (logoutButton) {
-        logoutButton.addEventListener('click', logout);
-      }
-
-      // You might want to show some other elements or perform other actions here
-    } else {
-      setDisplay('loginForm', 'block');
-      // Hide or reset other elements as necessary
-    }
-  }
-  
-  async function loginUser() {
-    await loginOrCreate(`/api/auth/login`);
-  }
-  
-  async function createUser() {
-    await loginOrCreate(`/api/auth/create`);
-  }
-  
-  async function loginOrCreate(endpoint) {
-    const userName = document.querySelector('#username')?.value;
-    const password = document.querySelector('#password')?.value;
-    console.log(userName);
-    console.log(password);
-      
-    const response = await fetch(endpoint, {
-      method: 'post',
-      body: JSON.stringify({ uname: userName, password: password }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
+    loginButton.addEventListener("click", function () {
+        registrationMode = !registrationMode;
+        loginButton.textContent = registrationMode ? "Login" : "Register";
     });
-    console.log(response)
-    if (response.ok) {
-      localStorage.setItem('username', userName);
-    //   window.location.href = 'play.html';
-      console.log("worked")
+    let userData = {};
 
-    } else {
-      const body = await response.json();
-      alert(`⚠ Error: ${body.msg}`); // Using alert for simplicity
-      // Implement modal or other error handling as needed
+    document.getElementById("login").addEventListener("submit", function (e) {
+        e.preventDefault();
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        if (registrationMode) {
+            if (!users[username]) {
+                users[username] = {
+                    password: password,
+                    highScore: 0,
+                };
+                alert("User registered successfully.");
+                userData = {
+                    username: username,
+                    highScore: users[username].highScore,
+                };
+            } else {
+                alert("Username already exists. Choose a different username or login.");
+                loginButton.textContent = "Login";
+            }
+        } else {
+            if (users[username] && users[username].password === password) {
+                alert("Login successful.");
+                userData = {
+                    username: username,
+                    highScore: users[username].highScore,
+                };
+            } else {
+                alert("Login failed. Check your username and password.");
+            }
+        }
+    });
+
+    const savedUserData = localStorage.getItem("userData");
+    localStorage.setItem("userData", JSON.stringify(userData));
+    if (savedUserData) {
+        const parsedUserData = JSON.parse(savedUserData);
+        for (const username in parsedUserData) {
+            users[username] = parsedUserData[username];
+        }
     }
-  }
-  
-  function setDisplay(controlId, display) {
-    const element = document.querySelector(`#${controlId}`);
-    if (element) {
-      element.style.display = display;
-    }
-  }
-  
-  function logout() {
-    localStorage.removeItem('username');
-    fetch(`/api/auth/logout`, {
-      method: 'delete',
-    }).then(() => (window.location.href = '/'));
-  }  
+});

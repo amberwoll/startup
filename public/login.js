@@ -38,8 +38,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   async function loginOrCreate(endpoint) {
     const userName = document.querySelector('#username')?.value;
     const password = document.querySelector('#password')?.value;
-    console.log(userName);
-    console.log(password);
       
     const response = await fetch(endpoint, {
       method: 'post',
@@ -48,11 +46,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
-    console.log(response)
     if (response.ok) {
       localStorage.setItem('username', userName);
-    //   window.location.href = 'play.html';
-      console.log("worked")
+      window.location.href = 'play.html';
 
     } else {
       const body = await response.json();

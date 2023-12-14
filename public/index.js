@@ -5,10 +5,7 @@ let randomButtonId;
 
 document.addEventListener("DOMContentLoaded", async function () {
     const buttons = document.querySelectorAll("button");
-    userArray();
-    checkLoggedInUser();
-    localStorage.setItem("userData", JSON.stringify(userData));
-    localStorage.setItem("userData.username", "userName");
+    await updateUserAndStore();
     loadUserHighScore();
     await loadTopScore();
     startNewRound();
@@ -47,41 +44,33 @@ document.addEventListener("DOMContentLoaded", async function () {
     };
 });
 
-async function checkLoggedInUser() {
-    try {
-        const response = await fetch('/api/user/me', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.ok) {
-            const user = await response.json();
-            userData.username = user.uname; // Update the username in userData
-            // You can also update the highScore here if needed
-        } else {
-            // Handle the case when the user is not logged in
-            console.log("User is not logged in");
-        }
-    } catch (error) {
-        console.error('Error checking logged in user:', error);
-    }
-}
 
 
 async function loadUserHighScore() {
     let savedUserData = localStorage.getItem("userData");
 
-    if (savedUserData && savedUserData !== "{}") {
-        userData = JSON.parse(savedUserData);
-        document.getElementById("loggedin").style.display = "none";
-        fetchUserHighScoreFromServer(userData.username);
+    if (savedUserData) {
+        savedUserData = JSON.parse(savedUserData);
+
+        // Check if a user is logged in
+        if (savedUserData.username) {
+            userData = savedUserData;
+            document.getElementById("loggedin").style.display = "none"; // Hide "loggedin" element
+            fetchUserHighScoreFromServer(userData.username);
+        } else {
+            // No user is logged in
+            document.getElementById("loggedin").style.display = "block"; // Show "loggedin" element
+            userData.highScore = 0; // Reset high score
+            document.getElementById("count2").value = 0; // Reset high score display
+        }
     } else {
-        fetchUserHighScoreFromServer("Player2");
+        // Handle the case when there's no userData in localStorage
+        document.getElementById("loggedin").style.display = "block";
+        userData.highScore = 0;
+        document.getElementById("count2").value = 0;
     }
 }
+
 
 
 
@@ -99,19 +88,40 @@ async function fetchUserHighScoreFromServer(username) {
     }
 }
 
-
-async function userArray() {
-    try {
-        const response = await fetch('http://localhost:4000/api/users');
-        const userArray = await response;
-        console.log(response);
-        if (userArray.length > 0) {
-            console.log(userArray)
-        }
-    } catch (error) {
-        console.error('Error loading users:', error);
+async function updateUserAndStore() {
+    const currentUser = await fetchCurrentUser();
+    if (currentUser) {
+        userData.username = currentUser.uname; // Assuming the object has a property uname
+        userData.highScore = 0; // Reset or update as needed
+        localStorage.setItem("userData", JSON.stringify(userData));
+    } else {
+        console.log("No user is currently logged in.");
     }
 }
+
+async function fetchCurrentUser() {
+    try {
+        const response = await fetch('http://localhost:4000/api/user/me', {
+            method: 'GET',
+            credentials: 'include', // Necessary for cookies to be sent with the request
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data; // Return the username
+        } else {
+            console.log("User is not logged in or error occurred");
+            return null; // User not logged in or error
+        }
+    } catch (error) {
+        console.error('Error fetching current user:', error);
+        return null;
+    }
+}
+
 
 async function loadTopScore() {
     try {
@@ -128,44 +138,48 @@ async function loadTopScore() {
 }
 
 async function saveScore(currentScore) {
-    const newScore = { username: userData.username, score: currentScore, date: new Date().toLocaleDateString() };
-    try {
-        await fetch('http://localhost:4000/api/score', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newScore)
-        });
-        if (currentScore > userData.highScore) {
-            userData.highScore = currentScore;
-            localStorage.setItem("userData", JSON.stringify(userData));
-            loadUserHighScore();
+    if (userData.username) {
+        const newScore = { username: userData.username, score: currentScore, date: new Date().toLocaleDateString() };
+        try {
+            await fetch('http://localhost:4000/api/score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newScore)
+            });
+            if (currentScore > userData.highScore) {
+                userData.highScore = currentScore;
+                localStorage.setItem("userData", JSON.stringify(userData));
+                loadUserHighScore();
+            }
+        } catch (error) {
+            console.error('Error saving score:', error);
         }
-    } catch (error) {
-        console.error('Error saving score:', error);
     }
 }
 
+
 function updateScores(newScore, username) {
-    let scores = JSON.parse(localStorage.getItem('scores') || '[]');
-    scores.push({ username: username, score: newScore, date: new Date().toLocaleDateString() });
-    scores.sort((a, b) => b.score - a.score);
+    if (username) {
+        let scores = JSON.parse(localStorage.getItem('scores') || '[]');
+        scores.push({ username: username, score: newScore, date: new Date().toLocaleDateString() });
+        scores.sort((a, b) => b.score - a.score);
 
-    if (scores.length > 10) {
-        scores.length = 10;
+        if (scores.length > 10) {
+            scores.length = 10;
+        }
+
+        localStorage.setItem('scores', JSON.stringify(scores));
     }
-
-    localStorage.setItem('scores', JSON.stringify(scores));
 }
 
 async function updateHighScores(newScore) {
-    if (newScore > userData.highScore) {
+    if (userData.username && newScore > userData.highScore) {
         userData.highScore = newScore;
         localStorage.setItem("userData", JSON.stringify(userData));
         document.getElementById("count2").value = newScore;
+        await saveScore(newScore);
+        await loadTopScore();
     }
-
-    await saveScore(newScore);
-    await loadTopScore();
 }
 
 

@@ -86,3 +86,13 @@ Frontend makes WebSocket connection - in index.js file
 Data sent over WebSocket connection - sent to index.html page
 
 WebSocket data displayed in the application interface - shown on the main index.html page
+
+## React Deliverable
+Bundled using WebPack and Babel as generated from using create-react-app - 
+
+Multiple functional react components - 
+
+React router - code is there, but could not get it to run
+
+React hooks - 
+ (code and commits are in the project, but could not get react to function as intended)

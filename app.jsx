@@ -1,38 +1,24 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import './app.css';
+import './styles.css';
 
 export default function App() {
     return (
-      <div className='body bg-dark text-light'>
-        <header className='container-fluid'>
-          <nav className='navbar fixed-top navbar-dark'>
-            <div className='navbar-brand'>
-              Shade Seeker<sup>&reg;</sup>
+      <div>
+        <header>
+            <div class="title-line" >
+                <h1 class="top">Shade Seeker<sup>&reg;</sup></h1>  
             </div>
-            <menu className='navbar-nav'>
-              <li className='nav-item'>
-                <a className='nav-link' href='login.html'>
-                  Login
-                </a>
-              </li>
-              <li className='nav-item'>
-                <a className='nav-link' href='play.html'>
-                  Play the Game
-                </a>
-              </li>
-              <li className='nav-item'>
-                <a className='nav-link' href='leaderboard.html'>
-                  Leaderboard
-                </a>
-              </li>
-              <li className='nav-item'>
-                <a className='nav-link' href='help.html'>
-                  Help
-                </a>
-              </li>
-            </menu>
-          </nav>
+
+            <nav>
+                <menu>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="play.html">The Game</a></li>
+                    <li><a href="leaderboard.html">Leaderboard</a></li>
+                    <li><a href="help.html">Help</a></li>
+                </menu>
+            </nav>
         </header>
   
         <main>App components go here</main>

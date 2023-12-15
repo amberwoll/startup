@@ -6,8 +6,8 @@ export default function App() {
     return (
       <div>
         <header>
-            <div class="title-line" >
-                <h1 class="top">Shade Seeker<sup>&reg;</sup></h1>  
+            <div className="title-line" >
+                <h1 className="top">Shade Seeker<sup>&reg;</sup></h1>  
             </div>
 
             <nav>
@@ -25,7 +25,7 @@ export default function App() {
   
         <footer>
             <hr />
-            <span class="text-reset">Created by Amber Woll, 2023</span>
+            <span className="text-reset">Created by Amber Woll, 2023</span>
             <br />
             <a href="https://github.com/amberwoll/startup">GitHub</a>
         </footer>

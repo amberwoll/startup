@@ -1,10 +1,16 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { Login } from './login/login';
+import { Play } from './play/play';
+import { Leaderboard } from './leaderboard/leaderboard';
+import { Help } from './help/help';
 
-export default function App() {
-    return (
-      <div>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <BrowserRouter>
+    <div>
         <header>
             <div className="title-line" >
                 <h1 className="top">Shade Seeker<sup>&reg;</sup></h1>  
@@ -12,16 +18,21 @@ export default function App() {
 
             <nav>
                 <menu>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="play.html">The Game</a></li>
-                    <li><a href="leaderboard.html">Leaderboard</a></li>
-                    <li><a href="help.html">Help</a></li>
+                    <li><NavLink className='nav-link' to='login'>Login</NavLink></li>
+                    <li><NavLink className='nav-link' to='play'>Play the Game</NavLink></li>
+                    <li><NavLink className='nav-link' to='leaderboard'>Leaderboard</NavLink></li>
+                    <li><NavLink className='nav-link' to='help'>Help</NavLink></li>
                 </menu>
             </nav>
         </header>
   
-        <main>App components go here</main>
+        <Routes>
+            <Route path='/login' element={<Login />} exact />
+            <Route path='/play' element={<Play />} />
+            <Route path='/leaderboard' element={<Leaderboard />} />
+            <Route path='/help' element={<Help />} />
+            <Route path='*' element={<NotFound />} />
+        </Routes>
   
         <footer>
             <hr />
@@ -30,5 +41,11 @@ export default function App() {
             <a href="https://github.com/amberwoll/startup">GitHub</a>
         </footer>
       </div>
-    );
+  </BrowserRouter>
+);
+
+function NotFound() {
+    return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
   }
+
+export default App;

@@ -7,7 +7,7 @@ const authCookieName = 'token';
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('src'));
 app.use(cookieParser());
 
 var apiRouter = express.Router();
@@ -130,7 +130,7 @@ function setAuthCookie(res, authToken) {
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
-  res.sendFile('index.html', {root: 'public'});
+  res.sendFile('index.html', {root: 'src'});
 });
 
 app.listen(port, () => {

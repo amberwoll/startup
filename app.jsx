@@ -1,14 +1,14 @@
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
-import { Login } from './login.jsx';
-import { Play } from './play.jsx';
-import { Leaderboard } from './leaderboard.jsx';
-import { Help } from './help.jsx';
+import { Login } from './login';
+import { Play } from './play';
+import { Leaderboard } from './leaderboard';
+import { Help } from './help';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 
-export default function App() {
-    return (
+function App() {
+    return(
         <BrowserRouter>
             <div>
                 <header>
@@ -18,7 +18,6 @@ export default function App() {
 
                     <nav>
                         <menu>
-                            <li><NavLink className='nav-link' to='index'>Home</NavLink></li>
                             <li><NavLink className='nav-link' to='login'>Login</NavLink></li>
                             <li><NavLink className='nav-link' to='play'>Play the Game</NavLink></li>
                             <li><NavLink className='nav-link' to='leaderboard'>Leaderboard</NavLink></li>
@@ -28,7 +27,6 @@ export default function App() {
                 </header>
         
                 <Routes>
-                    <Route path='/index' element={<Home />} exact />
                     <Route path='/login' element={<Login />} exact />
                     <Route path='/play' element={<Play />} />
                     <Route path='/leaderboard' element={<Leaderboard />} />
@@ -45,10 +43,9 @@ export default function App() {
             </div>
         </BrowserRouter>
     );
-
-  }
-
+}
   function NotFound() {
     return <main className='container-fluid bg-secondary text-center'>404: Return to sender. Address unknown.</main>;
   }
   
+  export default App;

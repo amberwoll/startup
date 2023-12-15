@@ -1,138 +1,231 @@
-const express = require('express');
-const MongoDB = require('./database.js');
-const app = express();
-const cookieParser = require('cookie-parser');
-const bcrypt = require('bcrypt');
-const authCookieName = 'token';
-const port = process.argv.length > 2 ? process.argv[2] : 4000;
+let currentScore = 0;
+let userData = { username: null, highScore: 0 };
+let colorChange = 60;
+let randomButtonId;
 
-app.use(express.json());
-app.use(express.static('public'));
-app.use(cookieParser());
+document.addEventListener("DOMContentLoaded", async function () {
+    const buttons = document.querySelectorAll("button");
+    await updateUserAndStore();
+    loadUserHighScore();
+    await loadTopScore();
+    configureWebSocket();
+    startNewRound();
 
-var apiRouter = express.Router();
-app.use(`/api`, apiRouter);
-app.set('trust proxy', true);
-
-apiRouter.get('/scores', async (_req, res) => {
-  const scores = await MongoDB.getHighScores();
-  res.send(scores);
-});
-
-
-// SubmitScore
-apiRouter.post('/score', async (req, res) => {
-  MongoDB.addScore(req.body);
-  const scores = await MongoDB.getHighScores();
-  res.send(scores);
-});
-
-apiRouter.get('/scores/highscore/:username', async (req, res) => {
-  const username = req.params.username;
-  try {
-      const topScore = await MongoDB.getTopScoreForUser(username);
-      res.json(topScore);
-  } catch (error) {
-      res.status(500).send('Error retrieving user high score');
-  }
-});
-
-// secureApiRouter verifies credentials for endpoints
-// var secureApiRouter = express.Router();
-// apiRouter.use(secureApiRouter);
-
-// secureApiRouter.use(async (req, res, next) => {
-//   authToken = req.cookies[authCookieName];
-//   const user = await DB.getUserByToken(authToken);
-//   if (user) {
-//     next();
-//   } else {
-//     res.status(401).send({ msg: 'Unauthorized' });
-//   }
-// });
-
-// DeleteAuth token if stored in cookie
-apiRouter.delete('/auth/logout', (_req, res) => {
-  res.clearCookie(authCookieName);
-  res.status(204).end();
-});
-
-// GetScores
-// secureApiRouter.get('/scores', async (req, res) => {
-//   const scores = await DB.getHighScores();
-//   res.send(scores);
-// });
-
-// SubmitScore
-// secureApiRouter.post('/score', async (req, res) => {
-//   const score = { ...req.body, ip: req.ip };
-//   await DB.addScore(score);
-//   const scores = await DB.getHighScores();
-//   res.send(scores);
-// });
-
-
-// createAuthorization from the given credentials
-apiRouter.post('/auth/create', async (req, res) => {
-  if (await MongoDB.getUser(req.body.uname)) {
-    res.status(409).send({ msg: 'Existing user' });
-  } else {
-    const user = await MongoDB.createUser(req.body.uname, req.body.password);
-    setAuthCookie(res, user.token);
-    res.send({
-      id: user._id,
+    buttons.forEach((button, id) => {
+        button.addEventListener("click", function () {
+            if ((id + 1) === randomButtonId) {
+                currentScore++;
+                if (colorChange > 1) {
+                    colorChange--;
+                }
+                updateScores(currentScore, userData.username);
+                if (currentScore > userData.highScore) {
+                    updateHighScores(currentScore);
+                }
+                document.getElementById("count1").value = currentScore;
+            } else {
+                updateHighScores(currentScore);
+                currentScore = 0;
+                document.getElementById("count1").value = currentScore;
+                colorChange = 60;
+            }
+            startNewRound();
+        });
     });
-  }
+
+    function startNewRound() {
+        const { randomColor, modifiedColor } = getRandomColors();
+        buttons.forEach((button) => {  
+            button.style.backgroundColor = randomColor;
+        });
+
+        randomButtonId = (Math.floor(Math.random() * 4) + 1);
+        const differentButton = document.getElementById(randomButtonId);
+        differentButton.style.backgroundColor = modifiedColor;
+    };
 });
 
-// loginAuthorization from the given credentials
-apiRouter.post('/auth/login', async (req, res) => {
-  const user = await MongoDB.getUser(req.body.uname);
-  if (user) {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      setAuthCookie(res, user.token);
-      res.send({ id: user._id });
-      return;
+
+
+async function loadUserHighScore() {
+    let savedUserData = localStorage.getItem("userData");
+
+    if (savedUserData) {
+        savedUserData = JSON.parse(savedUserData);
+
+        // Check if a user is logged in
+        if (savedUserData.username) {
+            userData = savedUserData;
+            document.getElementById("loggedin").style.display = "none"; // Hide "loggedin" element
+            fetchUserHighScoreFromServer(userData.username);
+        } else {
+            // No user is logged in
+            document.getElementById("loggedin").style.display = "block"; // Show "loggedin" element
+            userData.highScore = 0; // Reset high score
+            document.getElementById("count2").value = 0; // Reset high score display
+        }
+    } else {
+        // Handle the case when there's no userData in localStorage
+        document.getElementById("loggedin").style.display = "block";
+        userData.highScore = 0;
+        document.getElementById("count2").value = 0;
     }
-  }
-  res.status(401).send({ msg: 'Unauthorized' });
-});
-
-// getMe for the currently authenticated user
-apiRouter.get('/user/me', async (req, res) => {
-  authToken = req.cookies[authCookieName];
-  const user = await MongoDB.getUserByToken(authToken);
-  if (user) {
-    res.send({ uname: user.uname });
-    return;
-  }
-  res.status(401).send({ msg: 'Unauthorized' });
-});
-
-apiRouter.use(async (req, res, next) => {
-  authToken = req.cookies[authCookieName];
-  const user = await MongoDB.getUserByToken(authToken);
-  if (user) {
-    next();
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
-  }
-});
-
-function setAuthCookie(res, authToken) {
-  res.cookie(authCookieName, authToken, {
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict',
-  });
 }
 
 
-// Return the application's default page if the path is unknown
-app.use((_req, res) => {
-  res.sendFile('index.html', {root: 'public'});
-});
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+
+async function fetchUserHighScoreFromServer(username) {
+    try {
+        const response = await fetch(`http://localhost:4000/api/scores/highscore/${username}`);
+        const topScore = await response.json();
+        if (topScore && topScore?.score > userData.highScore) {
+            userData.highScore = topScore.score;
+            document.getElementById("count2").value = userData.highScore;
+        }
+        localStorage.setItem("userData", JSON.stringify(userData));
+    } catch (error) {
+        console.error('Error fetching user high score:', error);
+    }
+}
+
+async function updateUserAndStore() {
+    const currentUser = await fetchCurrentUser();
+    if (currentUser) {
+        userData.username = currentUser.uname; // Assuming the object has a property uname
+        userData.highScore = 0; // Reset or update as needed
+        localStorage.setItem("userData", JSON.stringify(userData));
+    } else {
+        console.log("No user is currently logged in.");
+    }
+}
+
+async function fetchCurrentUser() {
+    try {
+        const response = await fetch('http://localhost:4000/api/user/me', {
+            method: 'GET',
+            credentials: 'include', // Necessary for cookies to be sent with the request
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data; // Return the username
+        } else {
+            console.log("User is not logged in or error occurred");
+            return null; // User not logged in or error
+        }
+    } catch (error) {
+        console.error('Error fetching current user:', error);
+        return null;
+    }
+}
+
+
+async function loadTopScore() {
+    try {
+        const response = await fetch('http://localhost:4000/api/scores');
+        const scores = await response.json();
+        if (scores && scores.length > 0) {
+            const topScore = scores[0];
+            document.getElementById("highestScorePlayer").textContent = topScore.username;
+            document.getElementById("count3").value = topScore.score;
+        }
+    } catch (error) {
+        console.error('Error loading top score:', error);
+    }
+}
+
+async function saveScore(currentScore) {
+    if (userData.username) {
+        const newScore = { username: userData.username, score: currentScore, date: new Date().toLocaleDateString() };
+        try {
+            await fetch('http://localhost:4000/api/score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newScore)
+            });
+            if (currentScore > userData.highScore) {
+                userData.highScore = currentScore;
+                localStorage.setItem("userData", JSON.stringify(userData));
+                loadUserHighScore();
+            }
+        } catch (error) {
+            console.error('Error saving score:', error);
+        }
+    }
+}
+
+
+function updateScores(newScore, username) {
+    if (username) {
+        let scores = JSON.parse(localStorage.getItem('scores') || '[]');
+        scores.push({ username: username, score: newScore, date: new Date().toLocaleDateString() });
+        scores.sort((a, b) => b.score - a.score);
+
+        if (scores.length > 10) {
+            scores.length = 10;
+        }
+
+        localStorage.setItem('scores', JSON.stringify(scores));
+    }
+}
+
+async function updateHighScores(newScore) {
+    if (userData.username && newScore > userData.highScore) {
+        userData.highScore = newScore;
+        localStorage.setItem("userData", JSON.stringify(userData));
+        document.getElementById("count2").value = newScore;
+        await saveScore(newScore);
+        await loadTopScore();
+    }
+}
+
+function configureWebSocket() {
+    const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+    this.socket.onopen = (event) => {
+      this.displayMsg('system', 'game', 'connected');
+    };
+    this.socket.onclose = (event) => {
+      this.displayMsg('system', 'game', 'disconnected');
+    };
+    this.socket.onmessage = async (event) => {
+      const msg = JSON.parse(await event.data.text());
+      if (msg.type === GameEndEvent) {
+        this.displayMsg('player', msg.from, `scored ${msg.value.score}`);
+      } else if (msg.type === GameStartEvent) {
+        this.displayMsg('player', msg.from, `started a new game`);
+      }
+    };
+  }
+
+  function displayMsg(cls, from, msg) {
+    const chatText = document.querySelector('#player-messages');
+    chatText.innerHTML =
+      `<div class="event"><span class="${cls}-event">${from}</span> ${msg}</div>` + chatText.innerHTML;
+  }
+
+
+function getRandomColors() {
+    const baseR = Math.floor(Math.random() * 256);
+    const baseG = Math.floor(Math.random() * 256);
+    const baseB = Math.floor(Math.random() * 256);
+
+    const change = (Math.random() < 0.5 ? -1 : 1) * colorChange;
+
+    const adjustColor = (color) => {
+        return Math.min(255, Math.max(0, color + change));
+    };
+
+    const modifiedR = adjustColor(baseR);
+    const modifiedG = adjustColor(baseG);
+    const modifiedB = adjustColor(baseB);
+
+    const randomColor = `rgb(${baseR},${baseG},${baseB})`;
+    const modifiedColor = `rgb(${modifiedR},${modifiedG},${modifiedB})`;
+
+    return { randomColor, modifiedColor };
+}
